@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Système fiscal français 2023 — aperçu sunburst</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #fff; }
+  body { font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  #chart { width: 100vw; height: 100vh; }
+  #fallback { padding: 2rem; max-width: 720px; line-height: 1.55; color: #1a2533; }
+  #fallback code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+  #fallback h1 { font-size: 1.2rem; margin-top: 0; }
+</style>
+</head>
+<body>
+<div id="chart"></div>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+const el = document.getElementById('chart');
+const chart = echarts.init(el);
+fetch('fr_tax_system_sunburst_2023.json')
+  .then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(option => {
+    chart.setOption(option);
+    window.addEventListener('resize', () => chart.resize());
+  })
+  .catch(err => {
+    document.body.innerHTML =
+      '<div id="fallback">' +
+      '<h1>Impossible de charger le JSON (' + err.message + ')</h1>' +
+      '<p>Les navigateurs bloquent <code>fetch()</code> sur <code>file://</code>. ' +
+      'Démarrez un petit serveur HTTP local dans ce dossier :</p>' +
+      '<pre><code>python3 -m http.server 8000</code></pre>' +
+      '<p>puis ouvrez <a href="http://localhost:8000/">http://localhost:8000/</a>.</p>' +
+      '</div>';
+  });
+</script>
+</body>
+</html>
