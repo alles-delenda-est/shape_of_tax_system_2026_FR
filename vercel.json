@@ -1,0 +1,6 @@
+{
+  "buildCommand": "python3 build_fr_tax_system_chart.py",
+  "outputDirectory": ".",
+  "framework": null,
+  "cleanUrls": true
+}
