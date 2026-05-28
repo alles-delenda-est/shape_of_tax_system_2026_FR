@@ -666,8 +666,20 @@ option = {
 }
 
 
+import shutil
+
+json_payload = json.dumps(option, indent=2, ensure_ascii=False)
+
+# Local copy at the repo root (dev: `python3 -m http.server` from here).
 out = Path("fr_tax_system_sunburst_2023.json")
-out.write_text(json.dumps(option, indent=2, ensure_ascii=False), encoding="utf-8")
+out.write_text(json_payload, encoding="utf-8")
+
+# Build artefact for Vercel: same JSON + a copy of index.html in public/.
+public_dir = Path("public")
+public_dir.mkdir(exist_ok=True)
+(public_dir / "fr_tax_system_sunburst_2023.json").write_text(json_payload, encoding="utf-8")
+if Path("index.html").exists():
+    shutil.copy("index.html", public_dir / "index.html")
 
 for v in views:
     total_m = total_layout_m(v["data"])
